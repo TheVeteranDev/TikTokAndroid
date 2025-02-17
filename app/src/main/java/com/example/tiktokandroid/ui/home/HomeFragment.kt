@@ -1,5 +1,7 @@
 package com.example.tiktokandroid.ui.home
 
+import android.content.Context
+import android.media.AudioManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +10,7 @@ import android.widget.VideoView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tiktokandroid.R
 import com.example.tiktokandroid.databinding.FragmentHomeBinding
@@ -31,28 +34,34 @@ class HomeFragment : Fragment() {
         val root: View = binding.root
 
         val posts: List<Post> = listOf(
-            Post("android.resource://com.example.tiktokandroid/${R.raw.test_video}"),
-            Post("android.resource://com.example.tiktokandroid/${R.raw.test_video}")
+            Post("Philadelphia Eagles", "Saquon is unbelievable.  #Saquon", R.raw.cropped_saquon, 980, 26),
+            Post("Dragonball Z", "FAFO #DBZ", R.raw.cropped_we_are_the_ginyu, 530, 10),
+            Post("Angry Video Game Nerd", "Laughing Joking Numbnuts  #AVGN", R.raw.cropped_ljn, 330, 22)
         )
 
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = PostAdapter(posts)
+
+        val postAdapter = PostAdapter(posts)
+        recyclerView.adapter = postAdapter
+
+        val snap = PagerSnapHelper()
+        snap.attachToRecyclerView(recyclerView)
 
         recyclerView.addOnChildAttachStateChangeListener(object : RecyclerView.OnChildAttachStateChangeListener {
             override fun onChildViewAttachedToWindow(view: View) {
                 // Find the position of the attached view
                 val position = recyclerView.getChildAdapterPosition(view)
-                val videoView = view.findViewById<VideoView>(R.id.postVideoView)
+                val videoView = view.findViewById<VideoView>(R.id.post_video_view)
 
                 // Start the video if it's the one in view
                 if (position != RecyclerView.NO_POSITION) {
-                    videoView?.start()
+                    videoView.start()
                 }
             }
 
             override fun onChildViewDetachedFromWindow(view: View) {
-                val videoView = view.findViewById<VideoView>(R.id.postVideoView)
+                val videoView = view.findViewById<VideoView>(R.id.post_video_view)
                 // Pause the video when it scrolls out of view
                 videoView?.pause()
             }
