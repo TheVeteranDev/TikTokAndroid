@@ -1,7 +1,5 @@
 package com.example.tiktokandroid.ui.home
 
-import android.content.Context
-import android.media.AudioManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,8 +12,8 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tiktokandroid.R
 import com.example.tiktokandroid.databinding.FragmentHomeBinding
-import com.example.tiktokandroid.ui.post.Post
-import com.example.tiktokandroid.ui.post.PostAdapter
+import com.example.tiktokandroid.models.Post
+import com.example.tiktokandroid.adapters.PostAdapter
 
 class HomeFragment : Fragment() {
 
@@ -34,16 +32,14 @@ class HomeFragment : Fragment() {
         val root: View = binding.root
 
         val posts: List<Post> = listOf(
-            Post("Philadelphia Eagles", "Saquon is unbelievable.  #Saquon", R.raw.cropped_saquon, 980, 26),
-            Post("Dragonball Z", "FAFO #DBZ", R.raw.cropped_we_are_the_ginyu, 530, 10),
-            Post("Angry Video Game Nerd", "Laughing Joking Numbnuts  #AVGN", R.raw.cropped_ljn, 330, 22)
+            Post(1, "Philadelphia Eagles", "Saquon is unbelievable.  #Saquon", R.raw.cropped_saquon, 980, 26, false),
+            Post(2, "Dragonball Z", "FAFO #DBZ", R.raw.cropped_we_are_the_ginyu, 530, 10, false),
+            Post(3, "Angry Video Game Nerd", "Laughing Joking Numbnuts  #AVGN", R.raw.cropped_ljn, 330, 22, false)
         )
 
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-        val postAdapter = PostAdapter(posts)
-        recyclerView.adapter = postAdapter
+        recyclerView.adapter = PostAdapter(posts)
 
         val snap = PagerSnapHelper()
         snap.attachToRecyclerView(recyclerView)

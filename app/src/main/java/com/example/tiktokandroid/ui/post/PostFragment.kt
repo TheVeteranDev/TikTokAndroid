@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.tiktokandroid.R
 import com.example.tiktokandroid.databinding.FragmentPostBinding
 
 class PostFragment : Fragment() {
