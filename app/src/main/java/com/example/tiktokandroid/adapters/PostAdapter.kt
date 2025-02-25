@@ -30,6 +30,8 @@ class PostAdapter(private val posts: List<Post>) : RecyclerView.Adapter<PostAdap
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val post = posts[position]
 
+        setLikeButton(holder, post.isLiked)
+
         holder.username.text = post.username
         holder.text.text = post.text
         holder.likeCount.text = post.likeCount.toString()
@@ -42,7 +44,7 @@ class PostAdapter(private val posts: List<Post>) : RecyclerView.Adapter<PostAdap
         }
 
         holder.likeButton.setOnClickListener {
-            post.toggleIsLiked()
+            setLikeButton(holder, post.toggleIsLiked())
             holder.likeCount.text = post.likeCount.toString()
         }
 
@@ -53,6 +55,14 @@ class PostAdapter(private val posts: List<Post>) : RecyclerView.Adapter<PostAdap
 
     override fun getItemCount(): Int {
         return posts.size
+    }
+
+    fun setLikeButton(holder: PostViewHolder, isLiked: Boolean) {
+        if (isLiked) {
+            holder.likeButton.setImageResource(R.drawable.like_button_active)
+        } else {
+            holder.likeButton.setImageResource(R.drawable.like_button)
+        }
     }
 }
 

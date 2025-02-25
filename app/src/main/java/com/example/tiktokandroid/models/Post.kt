@@ -14,7 +14,7 @@ data class Post(
     val videoUri: Uri
         get() = Uri.parse("android.resource://com.example.tiktokandroid/${videoRaw}")
 
-    fun toggleIsLiked() {
+    fun toggleIsLiked(): Boolean {
         isLiked = !isLiked
 
         if (isLiked) {
@@ -22,6 +22,8 @@ data class Post(
         } else {
             likeCount--
         }
+
+        return isLiked
     }
 
 }
