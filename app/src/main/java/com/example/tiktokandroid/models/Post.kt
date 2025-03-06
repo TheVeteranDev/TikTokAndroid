@@ -9,7 +9,8 @@ data class Post(
     val videoRaw: Int,
     var likeCount: Int,
     var commentCount: Int,
-    var isLiked: Boolean
+    var isLiked: Boolean,
+    var comments: MutableList<Comment>? = null
 ) {
     val videoUri: Uri
         get() = Uri.parse("android.resource://com.example.tiktokandroid/${videoRaw}")

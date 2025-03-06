@@ -11,9 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tiktokandroid.R
+import com.example.tiktokandroid.adapters.CommentAdapter
 import com.example.tiktokandroid.databinding.FragmentHomeBinding
 import com.example.tiktokandroid.models.Post
 import com.example.tiktokandroid.adapters.PostAdapter
+import com.example.tiktokandroid.models.Comment
+import kotlin.random.Random
 
 class HomeFragment : Fragment() {
 
@@ -32,14 +35,14 @@ class HomeFragment : Fragment() {
         val root: View = binding.root
 
         val posts: List<Post> = listOf(
-            Post(1, "Philadelphia Eagles", "Saquon is unbelievable.  #Saquon", R.raw.cropped_saquon, 980, 26, false),
-            Post(2, "Dragonball Z", "FAFO #DBZ", R.raw.cropped_we_are_the_ginyu, 530, 10, false),
-            Post(3, "Angry Video Game Nerd", "Laughing Joking Numbnuts  #AVGN", R.raw.cropped_ljn, 330, 22, false)
+            Post(1, "Philadelphia Eagles", "Saquon is unbelievable.  #Saquon", R.raw.cropped_saquon, 980, 26, false, mutableListOf<Comment>()),
+            Post(2, "Dragonball Z", "FAFO #DBZ", R.raw.cropped_we_are_the_ginyu, 530, 10, false, mutableListOf<Comment>()),
+            Post(3, "Angry Video Game Nerd", "Laughing Joking Numbnuts  #AVGN", R.raw.cropped_ljn, 330, 22, false, mutableListOf<Comment>())
         )
 
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = PostAdapter(posts)
+        recyclerView.adapter = PostAdapter(requireContext(), posts)
 
         val snap = PagerSnapHelper()
         snap.attachToRecyclerView(recyclerView)

@@ -1,5 +1,7 @@
 package com.example.tiktokandroid.adapters
 
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,9 +10,12 @@ import android.widget.TextView
 import android.widget.VideoView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tiktokandroid.R
+import com.example.tiktokandroid.models.Comment
 import com.example.tiktokandroid.models.Post
+import com.example.tiktokandroid.CommentView
+import com.example.tiktokandroid.MainActivity
 
-class PostAdapter(private val posts: List<Post>) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
+class PostAdapter(private val context: Context, private val posts: List<Post>) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     class PostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val username: TextView = view.findViewById(R.id.post_username_text_view)
@@ -23,13 +28,15 @@ class PostAdapter(private val posts: List<Post>) : RecyclerView.Adapter<PostAdap
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.fragment_post, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.fragment_post, parent, false)
         return PostViewHolder(view)
+
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        val post = posts[position]
 
+        val post = posts[position]
         setLikeButton(holder, post.isLiked)
 
         holder.username.text = post.username
@@ -49,8 +56,20 @@ class PostAdapter(private val posts: List<Post>) : RecyclerView.Adapter<PostAdap
         }
 
         holder.commentsButton.setOnClickListener {
-            holder.commentCount.text = post.commentCount++.toString()
+            SharedData.postPos = position
+            val initSize = post.comments?.size
+            val intent = Intent(context, CommentView::class.java)
+            //intent.putExtra("postPosition", position)
+            context.startActivity(intent)
+            //back button must return to here!!!
+            posts[position].comments = SharedData.data //get new comments list from comment adapter
+
+            if (post.comments?.size != initSize) {
+                holder.commentCount.text = post.commentCount++.toString()
+            }
+            //Intent to go to comment activity
         }
+
     }
 
     override fun getItemCount(): Int {
@@ -64,6 +83,7 @@ class PostAdapter(private val posts: List<Post>) : RecyclerView.Adapter<PostAdap
             holder.likeButton.setImageResource(R.drawable.like_button)
         }
     }
+
 }
 
 
