@@ -8,14 +8,17 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.VideoView
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tiktokandroid.R
 import com.example.tiktokandroid.models.Comment
 import com.example.tiktokandroid.models.Post
 import com.example.tiktokandroid.CommentView
 import com.example.tiktokandroid.MainActivity
+import android.app.Activity
+import com.example.tiktokandroid.ui.home.HomeFragment
 
-class PostAdapter(private val context: Context, private val posts: List<Post>) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
+class PostAdapter(private val context: Context, private val posts: List<Post>?) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     class PostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val username: TextView = view.findViewById(R.id.post_username_text_view)
@@ -36,14 +39,36 @@ class PostAdapter(private val context: Context, private val posts: List<Post>) :
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
 
-        val post = posts[position]
-        setLikeButton(holder, post.isLiked)
+        val post = posts?.get(position)
+        if (post != null) {
+            setLikeButton(holder, post.isLiked)
+        }
 
-        holder.username.text = post.username
-        holder.text.text = post.text
-        holder.likeCount.text = post.likeCount.toString()
-        holder.commentCount.text = post.commentCount.toString()
-        holder.video.setVideoURI(post.videoUri)
+        if (post != null) {
+            post.comments = SharedData.postComments
+        } //get new comments list from comment adapter
+
+        if (post != null) {
+            if (post.comments?.size != null) {
+                post.commentCount = post.commentCount + post.comments!!.size - SharedData.recentCount
+            }
+        }
+
+        if (post != null) {
+            holder.username.text = post.username
+        }
+        if (post != null) {
+            holder.text.text = post.text
+        }
+        if (post != null) {
+            holder.likeCount.text = post.likeCount.toString()
+        }
+        if (post != null) {
+            holder.commentCount.text = post.commentCount.toString()
+        }
+        if (post != null) {
+            holder.video.setVideoURI(post.videoUri)
+        }
         holder.video.pause()
 
         holder.video.setOnPreparedListener { mediaPlayer ->
@@ -51,29 +76,28 @@ class PostAdapter(private val context: Context, private val posts: List<Post>) :
         }
 
         holder.likeButton.setOnClickListener {
-            setLikeButton(holder, post.toggleIsLiked())
-            holder.likeCount.text = post.likeCount.toString()
+            if (post != null) {
+                setLikeButton(holder, post.toggleIsLiked())
+            }
+            if (post != null) {
+                holder.likeCount.text = post.likeCount.toString()
+            }
         }
 
         holder.commentsButton.setOnClickListener {
-            SharedData.postPos = position
-            val initSize = post.comments?.size
+            //SharedData.postPos = position
+            SharedData.postList = posts
             val intent = Intent(context, CommentView::class.java)
-            //intent.putExtra("postPosition", position)
-            context.startActivity(intent)
-            //back button must return to here!!!
-            posts[position].comments = SharedData.data //get new comments list from comment adapter
-
-            if (post.comments?.size != initSize) {
-                holder.commentCount.text = post.commentCount++.toString()
+            if (post != null) {
+                intent.putExtra("postId",post.id)
             }
-            //Intent to go to comment activity
+            context.startActivity(intent)
+            //Intent to go to edit comment activity
         }
-
     }
 
     override fun getItemCount(): Int {
-        return posts.size
+        return posts?.size ?:0
     }
 
     fun setLikeButton(holder: PostViewHolder, isLiked: Boolean) {

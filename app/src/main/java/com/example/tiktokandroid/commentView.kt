@@ -1,15 +1,15 @@
 package com.example.tiktokandroid
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tiktokandroid.adapters.CommentAdapter
-import com.example.tiktokandroid.adapters.PostAdapter
+import com.example.tiktokandroid.adapters.SharedData
 import com.example.tiktokandroid.models.Comment
 import kotlin.random.Random
 
@@ -31,9 +31,11 @@ class CommentView : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_comment) //Set detailed view UI
 
+        val postId = intent.getIntExtra("postId",0)
+
         commentRecyclerView = findViewById(R.id.rv_comments) //must create view in xml
 
-        commentAdapter = CommentAdapter(commentList)
+        commentAdapter = CommentAdapter(this, commentList)
 
         commentRecyclerView.adapter = commentAdapter
         commentRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -42,26 +44,49 @@ class CommentView : AppCompatActivity() {
         mSaveButton = findViewById<Button>(R.id.save_comment_button)
         mBackButton = findViewById<Button>(R.id.back_button)
 
+        SharedData.recentCount = 0
+
+        var recentComments = getRecentComments(SharedData.postComments, postId, 5)
+        if (recentComments != null) {
+            recentComments.forEach {
+                commentList.add(it)
+                SharedData.recentCount++
+            }
+        }
+
         mSaveButton.setOnClickListener {
             val commentText = mInputCommentEditText.text.toString().trim()
             if (commentText.isNotEmpty()) {
-                val newComment = Comment(Random.nextInt(0, 100000), commentText, true, "patcav1")
+                val newComment = Comment(Random.nextInt(0, 100000), commentText, "patcav1",
+                    System.currentTimeMillis() / 1000, postId)
                 commentList.add(newComment)
                 commentAdapter.notifyItemInserted(commentList.size - 1)
+                commentAdapter.notifyDataSetChanged()
                 mInputCommentEditText.text.clear()
             }
         }
 
         mBackButton.setOnClickListener {
-            //finish() //this takes you back to black screen...why???
+
+            /*if (recentComments != null) {
+                recentComments.forEach {
+                    SharedData.recentCount++
+                    //commentList.remove(it)
+                }
+            }*/
             val intent = Intent(this, MainActivity::class.java)
-            //intent.putExtra("postPosition", position)
             this.startActivity(intent)
         }
 
-        //commentList.add(Comment(Random.nextInt(0, 100000), "Awesome post!", true, "kato5"))
-        //commentList.add(Comment(Random.nextInt(0, 100000), "Are you sure this is real?", true, "george67"))
-        commentAdapter.notifyDataSetChanged()
+    }
+
+    fun getRecentComments(comments: MutableList<Comment>?, postId: Int, limit: Int = 5): List<Comment>? {
+        if (comments != null) {
+            return comments.filter { it.postId == postId }
+                .sortedByDescending { it.timestamp }
+                .take(limit)
+        }
+        return (null)
     }
 }
 

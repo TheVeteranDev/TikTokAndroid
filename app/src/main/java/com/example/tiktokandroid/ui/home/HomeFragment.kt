@@ -15,6 +15,7 @@ import com.example.tiktokandroid.adapters.CommentAdapter
 import com.example.tiktokandroid.databinding.FragmentHomeBinding
 import com.example.tiktokandroid.models.Post
 import com.example.tiktokandroid.adapters.PostAdapter
+import com.example.tiktokandroid.adapters.SharedData
 import com.example.tiktokandroid.models.Comment
 import kotlin.random.Random
 
@@ -22,6 +23,46 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+
+    companion object {
+        init {
+            //This will run only once when the class is first instantiated
+            var posts: List<Post>? = null
+            posts = listOf(
+                Post(
+                    1,
+                    "Philadelphia Eagles",
+                    "Saquon is unbelievable.  #Saquon",
+                    R.raw.cropped_saquon,
+                    980,
+                    26,
+                    false,
+                    mutableListOf<Comment>()
+                ),
+                Post(
+                    2,
+                    "Dragonball Z",
+                    "FAFO #DBZ",
+                    R.raw.cropped_we_are_the_ginyu,
+                    530,
+                    10,
+                    false,
+                    mutableListOf<Comment>()
+                ),
+                Post(
+                    3,
+                    "Angry Video Game Nerd",
+                    "Laughing Joking Numbnuts  #AVGN",
+                    R.raw.cropped_ljn,
+                    330,
+                    22,
+                    false,
+                    mutableListOf<Comment>()
+                )
+            )
+            SharedData.postList = posts
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,15 +75,9 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val posts: List<Post> = listOf(
-            Post(1, "Philadelphia Eagles", "Saquon is unbelievable.  #Saquon", R.raw.cropped_saquon, 980, 26, false, mutableListOf<Comment>()),
-            Post(2, "Dragonball Z", "FAFO #DBZ", R.raw.cropped_we_are_the_ginyu, 530, 10, false, mutableListOf<Comment>()),
-            Post(3, "Angry Video Game Nerd", "Laughing Joking Numbnuts  #AVGN", R.raw.cropped_ljn, 330, 22, false, mutableListOf<Comment>())
-        )
-
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = PostAdapter(requireContext(), posts)
+        recyclerView.adapter = PostAdapter(requireContext(), SharedData.postList)
 
         val snap = PagerSnapHelper()
         snap.attachToRecyclerView(recyclerView)
