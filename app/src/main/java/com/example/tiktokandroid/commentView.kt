@@ -67,13 +67,6 @@ class CommentView : AppCompatActivity() {
         }
 
         mBackButton.setOnClickListener {
-
-            /*if (recentComments != null) {
-                recentComments.forEach {
-                    SharedData.recentCount++
-                    //commentList.remove(it)
-                }
-            }*/
             val intent = Intent(this, MainActivity::class.java)
             this.startActivity(intent)
         }
