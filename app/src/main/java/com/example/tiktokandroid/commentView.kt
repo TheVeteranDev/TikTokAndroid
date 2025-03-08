@@ -3,14 +3,21 @@ package com.example.tiktokandroid
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.VideoView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tiktokandroid.adapters.CommentAdapter
+import com.example.tiktokandroid.adapters.PostAdapter
 import com.example.tiktokandroid.adapters.SharedData
+import com.example.tiktokandroid.databinding.FragmentCommentBinding
+import com.example.tiktokandroid.databinding.FragmentHomeBinding
 import com.example.tiktokandroid.models.Comment
+import com.example.tiktokandroid.models.Post
 import kotlin.random.Random
 
 class CommentView : AppCompatActivity() {
@@ -44,13 +51,18 @@ class CommentView : AppCompatActivity() {
         mSaveButton = findViewById<Button>(R.id.save_comment_button)
         mBackButton = findViewById<Button>(R.id.back_button)
 
-        SharedData.recentCount = 0
+        var post: Post? = null
 
-        var recentComments = getRecentComments(SharedData.postComments, postId, 5)
+        for (item in SharedData.postList!!) {
+            if (item.id == postId) {
+                post = item
+            }
+        }
+
+        var recentComments = getRecentComments(post?.comments, postId, 5)
         if (recentComments != null) {
             recentComments.forEach {
                 commentList.add(it)
-                SharedData.recentCount++
             }
         }
 
@@ -62,13 +74,19 @@ class CommentView : AppCompatActivity() {
                 commentList.add(newComment)
                 commentAdapter.notifyItemInserted(commentList.size - 1)
                 commentAdapter.notifyDataSetChanged()
+                if (post != null) {
+                    post.comments?.add(newComment)
+                    post.updateCommentCount()
+                }
                 mInputCommentEditText.text.clear()
             }
         }
 
-        mBackButton.setOnClickListener {
+       mBackButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             this.startActivity(intent)
+
+           //finish()
         }
 
     }

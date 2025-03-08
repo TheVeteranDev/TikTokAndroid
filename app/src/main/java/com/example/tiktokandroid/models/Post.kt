@@ -1,6 +1,7 @@
 package com.example.tiktokandroid.models
 
 import android.net.Uri
+import com.example.tiktokandroid.adapters.SharedData
 
 data class Post(
     val id: Int,
@@ -25,6 +26,13 @@ data class Post(
         }
 
         return isLiked
+    }
+
+    fun updateCommentCount(): Int {
+        if (comments != null) {
+            commentCount++
+        }
+        return commentCount
     }
 
 }

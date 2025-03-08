@@ -41,11 +41,9 @@ class CommentAdapter(private val context: Context, val comments: MutableList<Com
         holder.usernameTextView.text = currentComment.username
         holder.commentTextView.text = currentComment.text
 
-        SharedData.postComments = comments //share comments list with post adapter
         postAdapter = PostAdapter(context, SharedData.postList)
         postAdapter.notifyDataSetChanged()
         //update data in post adapter
-
     }
 
     override fun getItemCount(): Int {

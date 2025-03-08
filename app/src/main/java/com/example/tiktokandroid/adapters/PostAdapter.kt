@@ -25,7 +25,7 @@ class PostAdapter(private val context: Context, private val posts: List<Post>?) 
         val text: TextView = view.findViewById(R.id.post_text_view)
         val video: VideoView = view.findViewById(R.id.post_video_view)
         val likeCount: TextView = view.findViewById(R.id.likes_count_text_view)
-        val commentCount: TextView = view.findViewById(R.id.comments_count_text_view)
+        var commentCount: TextView = view.findViewById(R.id.comments_count_text_view)
         val likeButton: ImageButton = view.findViewById(R.id.like_button)
         val commentsButton: ImageButton = view.findViewById(R.id.comments_button)
     }
@@ -42,16 +42,6 @@ class PostAdapter(private val context: Context, private val posts: List<Post>?) 
         val post = posts?.get(position)
         if (post != null) {
             setLikeButton(holder, post.isLiked)
-        }
-
-        if (post != null) {
-            post.comments = SharedData.postComments
-        } //get new comments list from comment adapter
-
-        if (post != null) {
-            if (post.comments?.size != null) {
-                post.commentCount = post.commentCount + post.comments!!.size - SharedData.recentCount
-            }
         }
 
         if (post != null) {
@@ -85,7 +75,7 @@ class PostAdapter(private val context: Context, private val posts: List<Post>?) 
         }
 
         holder.commentsButton.setOnClickListener {
-            //SharedData.postPos = position
+
             SharedData.postList = posts
             val intent = Intent(context, CommentView::class.java)
             if (post != null) {
