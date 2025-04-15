@@ -14,32 +14,32 @@ import com.example.tiktokandroid.R
 import com.example.tiktokandroid.databinding.FragmentHomeBinding
 import com.example.tiktokandroid.ui.post.Post
 import com.example.tiktokandroid.ui.post.PostAdapter
+import com.google.firebase.firestore.FirebaseFirestore
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
+    // Get the firestore instance to be able to query the database
+    private val db = FirebaseFirestore.getInstance()
+
+    private var posts = mutableListOf<Post>()
+    private var postAdapter = PostAdapter(posts)
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
-
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val posts: List<Post> = listOf(
-            Post(1, "Philadelphia Eagles", "Saquon is unbelievable.  #Saquon", R.raw.cropped_saquon, 980, 26, false),
-            Post(2, "Dragonball Z", "FAFO #DBZ", R.raw.cropped_we_are_the_ginyu, 530, 10, false),
-            Post(3, "Angry Video Game Nerd", "Laughing Joking Numbnuts  #AVGN", R.raw.cropped_ljn, 330, 22, false)
-        )
-
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = PostAdapter(posts)
+        recyclerView.adapter = postAdapter
+
+        fetchPosts()
 
         val snap = PagerSnapHelper()
         snap.attachToRecyclerView(recyclerView)
@@ -64,6 +64,20 @@ class HomeFragment : Fragment() {
         })
 
         return root
+    }
+
+    private fun fetchPosts() {
+        db.collection("posts").get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                posts.clear()
+                for (doc in task.result!!) {
+                    val post = doc.toObject(Post::class.java)
+                    post.id = doc.id
+                    posts.add(post)
+                }
+                postAdapter.notifyDataSetChanged()
+            }
+        }
     }
 
     override fun onDestroyView() {

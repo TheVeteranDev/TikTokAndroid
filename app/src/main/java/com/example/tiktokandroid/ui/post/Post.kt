@@ -1,18 +1,16 @@
 package com.example.tiktokandroid.ui.post
 
-import android.net.Uri
-
 data class Post(
-    val id: Int,
+    var id: String,
     val username: String,
     var text: String,
-    val videoRaw: Int,
+    val video: String,
     var likeCount: Int,
     var commentCount: Int,
     var isLiked: Boolean
 ) {
-    val videoUri: Uri
-        get() = Uri.parse("android.resource://com.example.tiktokandroid/${videoRaw}")
+    // constructor required for firestore
+    constructor() : this("", "", "", "", 0, 0, false)
 
     fun toggleIsLiked(): Boolean {
         isLiked = !isLiked

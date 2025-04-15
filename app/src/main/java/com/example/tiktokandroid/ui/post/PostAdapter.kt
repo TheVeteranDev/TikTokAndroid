@@ -8,6 +8,7 @@ import android.widget.TextView
 import android.widget.VideoView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tiktokandroid.R
+import androidx.core.net.toUri
 
 class PostAdapter(private val posts: List<Post>) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
@@ -25,7 +26,9 @@ class PostAdapter(private val posts: List<Post>) : RecyclerView.Adapter<PostAdap
             text.text = post.text
             likeCount.text = post.likeCount.toString()
             commentCount.text = post.commentCount.toString()
-            video.setVideoURI(post.videoUri)
+
+            val rawId = itemView.context.resources.getIdentifier(post.video, "raw", itemView.context.packageName)
+            video.setVideoURI("android.resource://com.example.tiktokandroid/${rawId}".toUri())
             video.pause()
             setLikeButtonState(post.isLiked)
 
