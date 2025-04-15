@@ -1,4 +1,4 @@
-package com.example.tiktokandroid.adapters
+package com.example.tiktokandroid.ui.post
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +8,6 @@ import android.widget.TextView
 import android.widget.VideoView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tiktokandroid.R
-import com.example.tiktokandroid.models.Post
 
 class PostAdapter(private val posts: List<Post>) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
@@ -20,6 +19,37 @@ class PostAdapter(private val posts: List<Post>) : RecyclerView.Adapter<PostAdap
         val commentCount: TextView = view.findViewById(R.id.comments_count_text_view)
         val likeButton: ImageButton = view.findViewById(R.id.like_button)
         val commentsButton: ImageButton = view.findViewById(R.id.comments_button)
+
+        fun bind(post: Post, postAdapter: PostAdapter) {
+            username.text = post.username
+            text.text = post.text
+            likeCount.text = post.likeCount.toString()
+            commentCount.text = post.commentCount.toString()
+            video.setVideoURI(post.videoUri)
+            video.pause()
+            setLikeButtonState(post.isLiked)
+
+            video.setOnPreparedListener { mediaPlayer ->
+                mediaPlayer.isLooping = true
+            }
+
+            likeButton.setOnClickListener {
+                setLikeButtonState(post.toggleIsLiked())
+                likeCount.text = post.likeCount.toString()
+            }
+
+            commentsButton.setOnClickListener {
+                commentCount.text = post.commentCount++.toString()
+            }
+        }
+
+        fun setLikeButtonState(liked: Boolean) {
+            if (liked) {
+                likeButton.setImageResource(R.drawable.like_button_active)
+            } else {
+                likeButton.setImageResource(R.drawable.like_button)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
@@ -28,43 +58,13 @@ class PostAdapter(private val posts: List<Post>) : RecyclerView.Adapter<PostAdap
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        val post = posts[position]
+        val player = posts[position]
 
-        setLikeButton(holder, post.isLiked)
-
-        holder.username.text = post.username
-        holder.text.text = post.text
-        holder.likeCount.text = post.likeCount.toString()
-        holder.commentCount.text = post.commentCount.toString()
-        holder.video.setVideoURI(post.videoUri)
-        holder.video.pause()
-
-        holder.video.setOnPreparedListener { mediaPlayer ->
-            mediaPlayer.isLooping = true
-        }
-
-        holder.likeButton.setOnClickListener {
-            setLikeButton(holder, post.toggleIsLiked())
-            holder.likeCount.text = post.likeCount.toString()
-        }
-
-        holder.commentsButton.setOnClickListener {
-            holder.commentCount.text = post.commentCount++.toString()
-        }
+        // Keeps all the logic for setting values in the holder class
+        holder.bind(player, this)
     }
 
     override fun getItemCount(): Int {
         return posts.size
     }
-
-    fun setLikeButton(holder: PostViewHolder, isLiked: Boolean) {
-        if (isLiked) {
-            holder.likeButton.setImageResource(R.drawable.like_button_active)
-        } else {
-            holder.likeButton.setImageResource(R.drawable.like_button)
-        }
-    }
 }
-
-
-

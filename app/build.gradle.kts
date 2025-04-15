@@ -54,4 +54,8 @@ dependencies {
 
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.ui)
+
+    implementation(platform(libs.firebase.bom)) // Firebase BOM (Bill of Materials)
+    implementation(libs.firebase.auth) // Firebase Authentication
+    implementation(libs.firebase.firestore) // Firebase Firestore Database
 }

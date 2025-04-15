@@ -1,4 +1,4 @@
-package com.example.tiktokandroid.models
+package com.example.tiktokandroid.ui.post
 
 import android.net.Uri
 

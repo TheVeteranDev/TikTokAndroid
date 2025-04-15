@@ -20,8 +20,6 @@ class PostFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val postViewModel =
-            ViewModelProvider(this).get(PostViewModel::class.java)
 
         _binding = FragmentPostBinding.inflate(inflater, container, false)
         val root: View = binding.root

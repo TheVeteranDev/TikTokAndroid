@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tiktokandroid.R
 import com.example.tiktokandroid.databinding.FragmentHomeBinding
-import com.example.tiktokandroid.models.Post
-import com.example.tiktokandroid.adapters.PostAdapter
+import com.example.tiktokandroid.ui.post.Post
+import com.example.tiktokandroid.ui.post.PostAdapter
 
 class HomeFragment : Fragment() {
 
