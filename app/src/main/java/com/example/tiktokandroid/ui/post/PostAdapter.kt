@@ -42,7 +42,7 @@ class PostAdapter(private val posts: List<Post>) : RecyclerView.Adapter<PostAdap
             }
 
             commentsButton.setOnClickListener {
-                commentCount.text = post.commentCount++.toString()
+                // TODO
             }
         }
 
