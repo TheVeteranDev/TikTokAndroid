@@ -59,4 +59,5 @@ dependencies {
     implementation(platform(libs.firebase.bom)) // Firebase BOM (Bill of Materials)
     implementation(libs.firebase.auth) // Firebase Authentication
     implementation(libs.firebase.firestore) // Firebase Firestore Database
+    implementation(libs.kotlinx.coroutines)
 }

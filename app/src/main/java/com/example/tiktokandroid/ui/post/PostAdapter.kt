@@ -25,7 +25,7 @@ class PostAdapter(private val posts: List<Post>) : RecyclerView.Adapter<PostAdap
             username.text = post.username
             text.text = post.text
             likeCount.text = post.likeCount.toString()
-            commentCount.text = post.commentCount.toString()
+            commentCount.text = post.comments.size.toString()
 
             val rawId = itemView.context.resources.getIdentifier(post.video, "raw", itemView.context.packageName)
             video.setVideoURI("android.resource://com.example.tiktokandroid/${rawId}".toUri())

@@ -6,15 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.VideoView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tiktokandroid.R
 import com.example.tiktokandroid.databinding.FragmentHomeBinding
+import com.example.tiktokandroid.ui.post.Comment
 import com.example.tiktokandroid.ui.post.Post
 import com.example.tiktokandroid.ui.post.PostAdapter
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class HomeFragment : Fragment() {
 
@@ -67,16 +70,22 @@ class HomeFragment : Fragment() {
     }
 
     private fun fetchPosts() {
-        db.collection("posts").get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                posts.clear()
-                for (doc in task.result!!) {
-                    val post = doc.toObject(Post::class.java)
-                    post.id = doc.id
-                    posts.add(post)
+        lifecycleScope.launch {
+            posts.clear()
+            val postDocs = db.collection("posts").get().await()
+            for (doc in postDocs) {
+                val post = doc.toObject(Post::class.java).apply { id = doc.id }
+
+                val commentsSnap = db.collection("posts/${doc.id}/comments").get().await()
+                for (commentDoc in commentsSnap) {
+                    val comment =
+                        commentDoc.toObject(Comment::class.java).apply { id = commentDoc.id }
+                    post.comments.add(comment)
                 }
-                postAdapter.notifyDataSetChanged()
+
+                posts.add(post)
             }
+            postAdapter.notifyDataSetChanged()
         }
     }
 

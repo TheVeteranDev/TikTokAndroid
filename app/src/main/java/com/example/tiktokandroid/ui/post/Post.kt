@@ -7,10 +7,11 @@ data class Post(
     val video: String,
     var likeCount: Int,
     var commentCount: Int,
-    var isLiked: Boolean
+    var isLiked: Boolean,
+    var comments: MutableList<Comment>
 ) {
     // constructor required for firestore
-    constructor() : this("", "", "", "", 0, 0, false)
+    constructor() : this("", "", "", "", 0, 0, false, mutableListOf())
 
     fun toggleIsLiked(): Boolean {
         isLiked = !isLiked
