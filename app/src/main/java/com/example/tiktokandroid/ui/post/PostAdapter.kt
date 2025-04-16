@@ -22,7 +22,7 @@ class PostAdapter(private val posts: List<Post>) : RecyclerView.Adapter<PostAdap
         val commentsButton: ImageButton = view.findViewById(R.id.comments_button)
 
         fun bind(post: Post, postAdapter: PostAdapter) {
-            username.text = post.username
+            username.text = post.username.replace(Regex("@.*"), "")
             text.text = post.text
             likeCount.text = post.likeCount.toString()
             commentCount.text = post.comments.size.toString()
