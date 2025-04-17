@@ -2,6 +2,7 @@ package com.example.tiktokandroid
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -10,6 +11,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.tiktokandroid.databinding.ActivityMainBinding
 import com.example.tiktokandroid.ui.auth.LoginActivity
+import com.example.tiktokandroid.ui.post.CreatePostActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
@@ -44,5 +47,13 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        val createPostButton: FloatingActionButton = binding.createPostButton
+        createPostButton.setOnClickListener {
+            val intent = Intent(this, CreatePostActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
     }
 }

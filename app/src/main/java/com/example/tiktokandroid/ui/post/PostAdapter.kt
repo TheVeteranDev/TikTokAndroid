@@ -8,7 +8,7 @@ import android.widget.TextView
 import android.widget.VideoView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tiktokandroid.R
-import androidx.core.net.toUri
+import com.google.firebase.storage.FirebaseStorage
 
 class PostAdapter(private val posts: List<Post>) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
@@ -21,20 +21,24 @@ class PostAdapter(private val posts: List<Post>) : RecyclerView.Adapter<PostAdap
         val likeButton: ImageButton = view.findViewById(R.id.like_button)
         val commentsButton: ImageButton = view.findViewById(R.id.comments_button)
 
+        val storage = FirebaseStorage.getInstance()
+
         fun bind(post: Post, postAdapter: PostAdapter) {
             username.text = post.username.replace(Regex("@.*"), "")
             text.text = post.text
             likeCount.text = post.likeCount.toString()
             commentCount.text = post.comments.size.toString()
 
-            val rawId = itemView.context.resources.getIdentifier(post.video, "raw", itemView.context.packageName)
-            video.setVideoURI("android.resource://com.example.tiktokandroid/${rawId}".toUri())
-            video.pause()
-            setLikeButtonState(post.isLiked)
-
-            video.setOnPreparedListener { mediaPlayer ->
-                mediaPlayer.isLooping = true
+            val storageRef = storage.reference.child(post.video)
+            storageRef.downloadUrl.addOnSuccessListener { uri ->
+                video.setVideoURI(uri)
+                video.start()
+                video.setOnPreparedListener { mediaPlayer ->
+                    mediaPlayer.isLooping = true
+                }
             }
+
+            setLikeButtonState(post.isLiked)
 
             likeButton.setOnClickListener {
                 setLikeButtonState(post.toggleIsLiked())

@@ -85,6 +85,7 @@ class HomeFragment : Fragment() {
 
                 posts.add(post)
             }
+            posts.sortByDescending { it.createdAt }
             postAdapter.notifyDataSetChanged()
         }
     }

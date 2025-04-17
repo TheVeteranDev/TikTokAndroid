@@ -32,6 +32,8 @@
 
         <activity android:name=".ui.auth.SignupActivity" />
 
+        <activity android:name=".ui.post.CreatePostActivity" />
+
     </application>
 
 </manifest>
