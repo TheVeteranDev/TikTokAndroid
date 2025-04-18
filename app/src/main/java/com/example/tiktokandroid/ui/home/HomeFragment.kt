@@ -1,15 +1,18 @@
 package com.example.tiktokandroid.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.VideoView
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.example.tiktokandroid.CommentView
 import com.example.tiktokandroid.R
 import com.example.tiktokandroid.adapters.CommentAdapter
 import com.example.tiktokandroid.databinding.FragmentHomeBinding
@@ -88,7 +91,12 @@ class HomeFragment : Fragment() {
                 val position = recyclerView.getChildAdapterPosition(view)
                 val videoView = view.findViewById<VideoView>(R.id.post_video_view)
 
-                // Start the video if it's the one in view
+                if (SharedData.currPost != 0) {
+                    //Scroll back to current post when returning from comment view
+                    recyclerView.smoothScrollToPosition(SharedData.currPost - 1)
+                    SharedData.currPost = 0
+                }
+
                 if (position != RecyclerView.NO_POSITION) {
                     videoView.start()
                 }

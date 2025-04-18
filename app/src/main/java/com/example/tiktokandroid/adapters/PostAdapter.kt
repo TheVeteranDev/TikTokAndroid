@@ -20,7 +20,8 @@ import com.example.tiktokandroid.ui.home.HomeFragment
 
 class PostAdapter(private val context: Context, private val posts: List<Post>?) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
-    class PostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class PostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+
         val username: TextView = view.findViewById(R.id.post_username_text_view)
         val text: TextView = view.findViewById(R.id.post_text_view)
         val video: VideoView = view.findViewById(R.id.post_video_view)
@@ -31,6 +32,7 @@ class PostAdapter(private val context: Context, private val posts: List<Post>?) 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
+
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.fragment_post, parent, false)
         return PostViewHolder(view)
@@ -39,26 +41,22 @@ class PostAdapter(private val context: Context, private val posts: List<Post>?) 
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
 
-        val post = posts?.get(position)
-        if (post != null) {
-            setLikeButton(holder, post.isLiked)
-        }
+        var post = posts?.get(position)
 
         if (post != null) {
+            setLikeButton(holder, post.isLiked)
+
             holder.username.text = post.username
-        }
-        if (post != null) {
+
             holder.text.text = post.text
-        }
-        if (post != null) {
+
             holder.likeCount.text = post.likeCount.toString()
-        }
-        if (post != null) {
+
             holder.commentCount.text = post.commentCount.toString()
-        }
-        if (post != null) {
+
             holder.video.setVideoURI(post.videoUri)
         }
+
         holder.video.pause()
 
         holder.video.setOnPreparedListener { mediaPlayer ->
@@ -68,18 +66,16 @@ class PostAdapter(private val context: Context, private val posts: List<Post>?) 
         holder.likeButton.setOnClickListener {
             if (post != null) {
                 setLikeButton(holder, post.toggleIsLiked())
-            }
-            if (post != null) {
+
                 holder.likeCount.text = post.likeCount.toString()
             }
         }
 
         holder.commentsButton.setOnClickListener {
 
-            SharedData.postList = posts
             val intent = Intent(context, CommentView::class.java)
             if (post != null) {
-                intent.putExtra("postId",post.id)
+                intent.putExtra("postId", post.id)
             }
             context.startActivity(intent)
             //Intent to go to edit comment activity
@@ -99,6 +95,3 @@ class PostAdapter(private val context: Context, private val posts: List<Post>?) 
     }
 
 }
-
-
-

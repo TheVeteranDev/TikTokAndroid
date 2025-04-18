@@ -1,9 +1,11 @@
 package com.example.tiktokandroid.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView.OnItemClickListener
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -15,6 +17,7 @@ import kotlin.random.Random
 import com.example.tiktokandroid.adapters.PostAdapter
 import com.example.tiktokandroid.models.Post
 import com.example.tiktokandroid.ui.home.HomeFragment
+import com.google.common.util.concurrent.Service
 
 class CommentAdapter(private val context: Context, val comments: MutableList<Comment>) : RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
 

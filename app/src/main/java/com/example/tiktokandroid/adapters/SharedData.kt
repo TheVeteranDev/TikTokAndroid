@@ -6,4 +6,5 @@ import com.example.tiktokandroid.models.Post
 
 object SharedData {
         var postList: List<Post>? =null
+        var currPost: Int = 0
     }

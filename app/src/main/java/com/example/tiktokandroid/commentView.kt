@@ -83,10 +83,9 @@ class CommentView : AppCompatActivity() {
         }
 
        mBackButton.setOnClickListener {
+            SharedData.currPost = postId
             val intent = Intent(this, MainActivity::class.java)
             this.startActivity(intent)
-
-           //finish()
         }
 
     }
